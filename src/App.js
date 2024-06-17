@@ -7,9 +7,9 @@ function App() {
   const [recordData, setRecordData] = useState([]);
 
   console.log("process.env:", process.env);
-  console.log("process.env.REACT_APP_NODE_ENV:", process.env.REACT_APP_NODE_ENV);
-  console.log("process.env.REACT_APP_SERVER_BASE_URL:", process.env.REACT_APP_SERVER_BASE_URL);
-  const base_url = process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_BASE_URL : process.env.REACT_APP_SERVER_BASE_URL;
+  console.log("process.env.REACT_APP_NODE_ENV:", process.env.FRONT_END_NODE_ENV);
+  console.log("process.env.REACT_APP_SERVER_BASE_URL:", process.env.FRONT_END_SERVER_BASE_URL);
+  const base_url = process.env.REACT_APP_NODE_ENV === 'development' ? process.env.FRONT_END_LOCAL_BASE_URL : process.env.FRONT_END_SERVER_BASE_URL;
 
   useEffect(() => {
    axios.get(`${base_url}/getUsers`).then(res => { setRecordData(res.data) }).catch(err => alert(`Some error occured ==>${err}`));

@@ -1,0 +1,30 @@
+name: Deploy Node Applicaiton
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+      - name: Login to docker hub
+        run:  docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build Docker Image
+        run: docker build -t tlotlang/front-end --build-arg FRONT_END_NODE='production' --build-arg FRONT_END_SERVER_BASE_URL ='${{ secrets.FRONT_END_SERVER_BASE_URL }}' .
+      - name: Publish Image to docker hub
+        run: docker push tlotlang/front-end:latest
+  
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull tlotlang/front-end:latest
+      - name: Delete old container
+        run: docker rm -f front-end-container
+      - name: Run Docker Container
+        run: docker run -d -p 3000:80 --name front-end-container tlotlang/front-end
